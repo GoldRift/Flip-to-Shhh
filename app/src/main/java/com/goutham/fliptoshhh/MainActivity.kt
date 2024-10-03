@@ -17,11 +17,9 @@ class MainActivity : AppCompatActivity() {
         toggleShhhButton.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 // Toggle is on
-                Toast.makeText(this, "Toggle is on", Toast.LENGTH_SHORT).show()
                 startService(android.content.Intent(this, FlipToShhhService::class.java))
             } else {
                 // Toggle is off
-                Toast.makeText(this, "Toggle is off", Toast.LENGTH_SHORT).show()
                 stopService(android.content.Intent(this, FlipToShhhService::class.java))
             }
         }
