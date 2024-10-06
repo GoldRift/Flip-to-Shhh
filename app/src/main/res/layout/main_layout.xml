@@ -16,23 +16,30 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@android:drawable/btn_star" />
 
-    <ToggleButton
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/toggleShhh"
-        android:layout_width="150dp"
-        android:layout_height="80dp"
-        android:textAlignment="center"
-        android:textColor="#03A9F4"
-        android:textSize="48sp"
+        android:layout_width="160dp"
+        android:layout_height="95dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/coords"
-        android:layout_width="131dp"
-        android:layout_height="104dp"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="16dp" />
+        android:id="@+id/toggleIndicator"
+        style="@android:style/Widget.Material.TextView"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:editable="false"
+        android:elevation="10dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="OFF"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textSize="34sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
