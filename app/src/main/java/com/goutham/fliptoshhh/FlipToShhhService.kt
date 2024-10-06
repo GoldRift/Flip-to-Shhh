@@ -15,7 +15,6 @@ import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
-import android.os.VibrationEffect
 import android.os.Vibrator
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -49,8 +48,6 @@ class FlipToShhhService : Service(), SensorEventListener {
 
         // Gets the ringerStatus before faceDown
         ringerStatus = audioManager.getRingerMode()
-
-        Log.i("Ringer", "Ringer Mode is ${audioManager.getRingerMode()}")
 
         // Creates notification channel
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -107,7 +104,6 @@ class FlipToShhhService : Service(), SensorEventListener {
                 } else {
                     Handler(Looper.getMainLooper()).postDelayed({
                         audioManager.setRingerMode(ringerStatus)
-                        Log.i("Ringer", "Ringer changed to ${audioManager.getRingerMode()}")
                     }, 1000)
                 }
             }

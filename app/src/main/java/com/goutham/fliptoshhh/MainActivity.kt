@@ -4,7 +4,6 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.media.AudioManager
 import android.os.Bundle
 import android.provider.Settings
 import android.widget.TextView
@@ -15,7 +14,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var audioManager: AudioManager
     private var isToggledOn = false
     private lateinit var sharedPreferences: SharedPreferences
 
