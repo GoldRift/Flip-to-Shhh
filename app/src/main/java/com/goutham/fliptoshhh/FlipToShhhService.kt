@@ -1,5 +1,6 @@
 package com.goutham.fliptoshhh
 
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -15,7 +16,6 @@ import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
-import android.os.Vibrator
 import android.util.Log
 import androidx.annotation.RequiresApi
 
@@ -23,7 +23,6 @@ import androidx.annotation.RequiresApi
 class FlipToShhhService : Service(), SensorEventListener {
 
     private lateinit var sensorManager: SensorManager
-    private lateinit var vibrator: Vibrator
     private lateinit var audioManager: AudioManager
     private var faceDown = false
     private var ringerStatus = 4
@@ -43,15 +42,10 @@ class FlipToShhhService : Service(), SensorEventListener {
         // Gets the system sensor service
         sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
 
-        // Gets the system vibrator service
-        vibrator = getSystemService(VIBRATOR_SERVICE) as Vibrator
-
-        // Gets the ringerStatus before faceDown
-        ringerStatus = audioManager.getRingerMode()
-
         // Creates notification channel
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel("flip_to_shhh", "Flip to Shhh", NotificationManager.IMPORTANCE_LOW)
+            channel.setShowBadge(false)
             val notificationManager = getSystemService(NotificationManager::class.java)
             notificationManager.createNotificationChannel(channel)
         }
@@ -64,6 +58,7 @@ class FlipToShhhService : Service(), SensorEventListener {
             .setContentText("App is running")
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentIntent(pendingIntent)
+            .setNumber(0)
             .build()
         startForeground(1, notification)
 
@@ -73,7 +68,7 @@ class FlipToShhhService : Service(), SensorEventListener {
             sensorManager.registerListener(
                 this,
                 accelerometer,
-                SensorManager.SENSOR_DELAY_UI)
+                SensorManager.SENSOR_DELAY_NORMAL)
         }
 
         return super.onStartCommand(intent, flags, startId)
@@ -82,18 +77,24 @@ class FlipToShhhService : Service(), SensorEventListener {
     // Function to check the sensor orientation and changes the faceDown variable
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onSensorChanged(event: SensorEvent?) {
-
         if (event?.sensor?.type == Sensor.TYPE_ACCELEROMETER) {
             val x = event.values[0]
             val y = event.values[1]
             val z = event.values[2]
 
-            // Checks the face down status
-            val newFaceDownState = x < 2 && x > -2 && y < 2 && y > -2 && z < -9
 
+            val newFaceDownState = x < 2 && x > -2 && y < 2 && y > -2 && z < -9 // Checks the face down status
+            val currentTime = System.currentTimeMillis() // Gets time for debounce time
 
-            val currentTime = System.currentTimeMillis()
-            if (newFaceDownState != faceDown && currentTime - lastFlipTime > deBounceTime) {
+            if (!faceDown) {
+                ringerStatus = audioManager.getRingerMode()
+                Log.i("Ringer status test", "The current ringer is $ringerStatus")
+            }
+
+            if (newFaceDownState != faceDown
+                && currentTime - lastFlipTime > deBounceTime
+                && audioManager.ringerMode != AudioManager.RINGER_MODE_SILENT
+                && audioManager.ringerMode != AudioManager.RINGER_MODE_VIBRATE) {
                 faceDown = newFaceDownState
                 lastFlipTime = currentTime
 
