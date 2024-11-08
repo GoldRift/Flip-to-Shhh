@@ -1,6 +1,5 @@
 package com.goutham.fliptoshhh
 
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -13,9 +12,7 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.media.AudioManager
 import android.os.Build
-import android.os.Handler
 import android.os.IBinder
-import android.os.Looper
 import android.util.Log
 import androidx.annotation.RequiresApi
 
@@ -25,7 +22,6 @@ class FlipToShhhService : Service(), SensorEventListener {
     private lateinit var sensorManager: SensorManager
     private lateinit var audioManager: AudioManager
     private var faceDown = false
-    private var ringerStatus = 4
     private val deBounceTime = 2000
     private var lastFlipTime: Long = 0
 
@@ -83,29 +79,21 @@ class FlipToShhhService : Service(), SensorEventListener {
             val z = event.values[2]
 
 
-            val newFaceDownState = x < 2 && x > -2 && y < 2 && y > -2 && z < -9 // Checks the face down status
+            val isFaceDown = x < 2 && x > -2 && y < 2 && y > -2 && z < -9 // Checks the face down status
             val currentTime = System.currentTimeMillis() // Gets time for debounce time
 
-            if (!faceDown) {
-                ringerStatus = audioManager.getRingerMode()
-                Log.i("Ringer status test", "The current ringer is $ringerStatus")
-            }
 
-            if (newFaceDownState != faceDown
-                && currentTime - lastFlipTime > deBounceTime
-                && audioManager.ringerMode != AudioManager.RINGER_MODE_SILENT
-                && audioManager.ringerMode != AudioManager.RINGER_MODE_VIBRATE) {
-                faceDown = newFaceDownState
+            if (isFaceDown && !faceDown && currentTime - lastFlipTime > deBounceTime) {
+                faceDown = true
                 lastFlipTime = currentTime
-
-                if (faceDown) {
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT)
-                    }, 1000)
-                } else {
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        audioManager.setRingerMode(ringerStatus)
-                    }, 1000)
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT)
+                Log.i("FlipToShhhService", "Phone flipped face down. Ringer mode set to SILENT.")
+            } else if (!isFaceDown && faceDown && currentTime - lastFlipTime > deBounceTime) {
+                faceDown = false
+                lastFlipTime = currentTime
+                if (audioManager.ringerMode != AudioManager.RINGER_MODE_NORMAL) {
+                    audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL)
+                    Log.i("FlipToShhhService", "Phone flipped upright. Ringer mode set to NORMAL.")
                 }
             }
         }
@@ -120,7 +108,7 @@ class FlipToShhhService : Service(), SensorEventListener {
 
         // Stops the sensor service
         sensorManager.unregisterListener(this)
-        stopForeground(true)
+        STOP_FOREGROUND_REMOVE
         super.onDestroy()
     }
 
