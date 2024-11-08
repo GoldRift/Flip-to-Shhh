@@ -1,11 +1,8 @@
 package com.goutham.fliptoshhh
 
-import android.app.NotificationManager
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.provider.Settings
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -36,14 +33,6 @@ class MainActivity : AppCompatActivity() {
         } else {
             toggleIndicator.setText("OFF")
         }
-
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        if (!notificationManager.isNotificationPolicyAccessGranted) {
-            val intent = Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS)
-            startActivity(intent)
-        }
-
-
 
         toggleShhhButton.setOnClickListener {
             if (!isToggledOn) {
