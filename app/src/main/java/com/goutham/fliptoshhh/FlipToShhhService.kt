@@ -22,10 +22,11 @@ class FlipToShhhService : Service(), SensorEventListener {
     private lateinit var sensorManager: SensorManager
     private lateinit var audioManager: AudioManager
     private lateinit var notificationManager: NotificationManager
-    private val deBounceTime = 2000
+    private val deBounceTime = 1000
     private var originalRingerMode: Int? = null
     private var faceDown = false
     private var lastFlipTime: Long = 0
+
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
