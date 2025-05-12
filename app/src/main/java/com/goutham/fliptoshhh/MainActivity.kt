@@ -25,39 +25,36 @@ class MainActivity : AppCompatActivity() {
         // Initialize SharedPreferences
         sharedPreferences = getSharedPreferences("FlipToShhhPrefs", Context.MODE_PRIVATE)
 
-        // Retrieve saved toggle state and set the textview to it
+        // Retrieve saved toggle state and update UI
         isToggledOn = sharedPreferences.getBoolean("isToggledOn", false)
-
-        if (isToggledOn) {
-            toggleIndicator.setText("ON")
-        } else {
-            toggleIndicator.setText("OFF")
-        }
+        updateToggleIndicator(toggleIndicator)
 
         toggleShhhButton.setOnClickListener {
-            if (!isToggledOn) {
-                // Toggle is on
+            isToggledOn = !isToggledOn
+            if (isToggledOn) {
                 startService(android.content.Intent(this, FlipToShhhService::class.java))
-                toggleIndicator.setText("ON")
-                isToggledOn = true
             } else {
-                // Toggle is off
                 stopService(android.content.Intent(this, FlipToShhhService::class.java))
-                toggleIndicator.setText("OFF")
-                isToggledOn = false
             }
-
-            with(sharedPreferences.edit()) {
-                putBoolean("isToggledOn", isToggledOn)
-                apply()
-            }
+            updateToggleIndicator(toggleIndicator)
+            saveToggleState()
         }
 
         settingsButton.setOnClickListener {
-            Toast.makeText(this,"I ain't that fast", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "I ain't that fast", Toast.LENGTH_SHORT).show()
         }
     }
 
+    private fun updateToggleIndicator(toggleIndicator: TextView) {
+        toggleIndicator.text = if (isToggledOn) "ON" else "OFF"
+    }
+
+    private fun saveToggleState() {
+        with(sharedPreferences.edit()) {
+            putBoolean("isToggledOn", isToggledOn)
+            apply()
+        }
+    }
 
     override fun onDestroy() {
         super.onDestroy()
