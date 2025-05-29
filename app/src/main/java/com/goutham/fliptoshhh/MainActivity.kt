@@ -7,12 +7,13 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
+import androidx.preference.PreferenceManager
 
 class MainActivity : AppCompatActivity() {
 
     private var isToggledOn = false
+    private var modeIndicator: TextView? = null
     private lateinit var sharedPreferences: SharedPreferences
-    public
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,6 +22,7 @@ class MainActivity : AppCompatActivity() {
         val toggleShhhSwitch = findViewById<SwitchCompat>(R.id.MainToggle)
         val toggleIndicator = findViewById<TextView>(R.id.StatusIndicator)
         val settingsButton = findViewById<ImageButton>(R.id.SettingsButton)
+        modeIndicator = findViewById<TextView>(R.id.ModeIndicator)
 
 
 
@@ -59,6 +61,18 @@ class MainActivity : AppCompatActivity() {
         settingsButton.setOnClickListener {
             val intent = android.content.Intent(this, SettingsActivity::class.java)
             startActivity(intent)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        val sHHHMode = prefs.getString("sHHHMode", "0")
+
+        if (sHHHMode == "0") {
+            modeIndicator?.setText(R.string.mode_indicator_silent)
+        } else {
+            modeIndicator?.setText(R.string.mode_indicator_vibrate)
         }
     }
 

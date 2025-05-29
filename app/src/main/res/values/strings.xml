@@ -22,5 +22,6 @@
     <string name="status_indicator_off">Stopped</string>
     <string name="status_indicator_on">Active</string>
     <string name="flip_to_mode">Flip-to Mode</string>
-    <string name="mode_indicator">Silent</string>
+    <string name="mode_indicator_silent">Silent</string>
+    <string name="mode_indicator_vibrate">Vibrate</string>
 </resources>
