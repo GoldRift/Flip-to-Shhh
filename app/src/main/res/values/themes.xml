@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.FlipToShhh" parent="Theme.Material3.DynamicColors.DayNight.NoActionBar" />
+    <style name="Theme.FlipToShhh" parent="Theme.Material3.DynamicColors.DayNight.NoActionBar">
+        <!-- Force SwitchCompat-style switch instead of Material3's switch -->
+        <item name="switchStyle">@style/Widget.AppCompat.CompoundButton.Switch</item>
+        <item name="checkboxStyle">@style/Widget.AppCompat.CompoundButton.CheckBox</item>
+    </style>
+    <style name="Theme.FlipToShhhSettings" parent="Theme.Material3.DynamicColors.DayNight.NoActionBar">
+        <!-- Force SwitchCompat-style switch instead of Material3's switch -->
+        <item name="switchStyle">@style/Widget.AppCompat.CompoundButton.Switch</item>
+        <item name="checkboxStyle">@style/Widget.AppCompat.CompoundButton.CheckBox</item>
+        <item name="android:textColor">#49454e</item>
+    </style>
 </resources>
