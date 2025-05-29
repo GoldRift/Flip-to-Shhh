@@ -3,48 +3,51 @@ package com.goutham.fliptoshhh
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.widget.ImageButton
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import androidx.appcompat.widget.SwitchCompat
 
 class MainActivity : AppCompatActivity() {
 
     private var isToggledOn = false
     private lateinit var sharedPreferences: SharedPreferences
+    public
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_layout)
 
-        val toggleShhhButton = findViewById<ExtendedFloatingActionButton>(R.id.toggleShhh)
-        val toggleIndicator = findViewById<TextView>(R.id.toggleIndicator)
-        val settingsButton = findViewById<FloatingActionButton>(R.id.settings)
+        val toggleShhhSwitch = findViewById<SwitchCompat>(R.id.MainToggle)
+        val toggleIndicator = findViewById<TextView>(R.id.StatusIndicator)
+        val settingsButton = findViewById<ImageButton>(R.id.SettingsButton)
+
+
 
         // Initialize SharedPreferences
         sharedPreferences = getSharedPreferences("FlipToShhhPrefs", Context.MODE_PRIVATE)
 
         // Retrieve saved toggle state and set the textview to it
         isToggledOn = sharedPreferences.getBoolean("isToggledOn", false)
+        toggleShhhSwitch.isChecked = isToggledOn
 
         if (isToggledOn) {
-            toggleIndicator.setText("ON")
+            toggleIndicator.setText(R.string.status_indicator_on)
         } else {
-            toggleIndicator.setText("OFF")
+            toggleIndicator.setText(R.string.status_indicator_off)
         }
 
-        toggleShhhButton.setOnClickListener {
-            if (!isToggledOn) {
+        toggleShhhSwitch.setOnCheckedChangeListener { _, isChecked ->
+            isToggledOn = isChecked
+
+            if (isChecked) {
                 // Toggle is on
                 startService(android.content.Intent(this, FlipToShhhService::class.java))
-                toggleIndicator.setText("ON")
-                isToggledOn = true
+                toggleIndicator.setText(R.string.status_indicator_on)
             } else {
                 // Toggle is off
                 stopService(android.content.Intent(this, FlipToShhhService::class.java))
-                toggleIndicator.setText("OFF")
-                isToggledOn = false
+                toggleIndicator.setText(R.string.status_indicator_off)
             }
 
             with(sharedPreferences.edit()) {
@@ -54,7 +57,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         settingsButton.setOnClickListener {
-            Toast.makeText(this,"I ain't that fast", Toast.LENGTH_SHORT).show()
+            val intent = android.content.Intent(this, SettingsActivity::class.java)
+            startActivity(intent)
         }
     }
 

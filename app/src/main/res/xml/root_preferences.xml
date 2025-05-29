@@ -1,0 +1,23 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory android:title="General">
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/flip_options"
+            android:entryValues="@array/flip_values"
+            android:key="sHHHMode"
+            android:title="Shh Mode"
+            app:summary="Select what ringer mode is set to when the phone is upside down" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Testing">
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="vibrationSetting"
+            android:title="Enable Vibration"
+            app:persistent="true"
+            app:summary="When the phone is upside down, it vibrates for testing purposes" />
+    </PreferenceCategory>
+
+</PreferenceScreen>
